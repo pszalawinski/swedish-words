@@ -49,7 +49,9 @@ def practice():
         if response == row[2]:
             print("\nnoice!\n")
             return True
-        if response.upper == const.end:
+        if response == const.end:
+            return False
+        if response == const.quit:
             return False
         else:
             print("Nope. Try again\n")

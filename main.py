@@ -17,11 +17,11 @@ user_input.strip()
 while user_input == "":
     user_input = input(const.what_do)
 
-while user_input.upper != "QUIT":
+while user_input.upper != const.quit:
     if user_input.upper() == "ADD":
         service.insert_new_word()
         user_input = input(const.add_or_end)
-    if user_input.upper() == "QUIT":
+    if user_input.upper() == const.quit:
         print("Vi ses!")
         con.close()
         quit()
