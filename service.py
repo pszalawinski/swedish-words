@@ -46,8 +46,10 @@ def practice():
     response = "again"
     while response == "again":
         response = input("How it is in swedish?\n")
-        if response == row[2]:
+        if response.strip() == row[2]:
             print("\nnoice!\n")
+            print(int(row[0]))
+            add_point(int(row[0]))
             return True
         if response == const.end:
             return False
@@ -55,6 +57,7 @@ def practice():
             return False
         else:
             print("Nope. Try again\n")
+            remove_point(int(row[0]))
             response = "again"
 
 def return_response(response):
@@ -62,3 +65,21 @@ def return_response(response):
         return
     else:
         return const.end
+
+def add_point(id):
+  sql_req = '''SELECT * FROM words where id = ''' + str(id)
+  counter = con.execute(sql_req)
+  for row in counter:  
+    new_counter = int(row[3]) + 1
+    sql_update = '''UPDATE words SET counter = ''' + str(new_counter) + ''' WHERE id = ''' + str(id)
+    con.execute(sql_update)
+    con.commit()
+
+def remove_point(id):
+    sql_req = '''SELECT * FROM words where id = ''' + str(id)
+    counter = con.execute(sql_req)
+    for row in counter:  
+        new_counter = int(row[3]) - 1
+        sql_update = '''UPDATE words SET counter = ''' + str(new_counter) + ''' WHERE id = ''' + str(id)
+        con.execute(sql_update)
+        con.commit()
