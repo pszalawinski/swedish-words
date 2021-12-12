@@ -37,7 +37,7 @@ def print_all_words():
      print("\n")
 
 def practice():
-    sql_req = '''SELECT * FROM words ORDER BY RANDOM() LIMIT 1'''
+    sql_req = '''SELECT * FROM words WHERE counter < 15 ORDER BY RANDOM() LIMIT 1'''
     word = con.execute(sql_req)
     print("\n")
     for row in word:
