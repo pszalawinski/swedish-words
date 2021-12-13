@@ -25,6 +25,12 @@ while user_input.upper != const.quit:
         print("Vi ses!")
         con.close()
         quit()
+    if user_input == "drop_table":
+        service.drop_table()
+        user_input = const.end
+    if user_input == "create_table":
+        service.create_table()
+        user_input = const.end
     if user_input.upper() == "START":
        while service.practice():
            user_input = const.start

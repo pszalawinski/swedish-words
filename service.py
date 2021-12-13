@@ -83,3 +83,15 @@ def remove_point(id):
         sql_update = '''UPDATE words SET counter = ''' + str(new_counter) + ''' WHERE id = ''' + str(id)
         con.execute(sql_update)
         con.commit()
+
+def create_table():
+    con.execute('''CREATE TABLE words
+         (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+         polish_word TEXT NOT NULL,
+         swedish_word TEXT NOT NULL,
+         counter INT);''')
+    con.commit()
+    
+def drop_table():
+    con.execute('''DROP TABLE words;''')
+    con.commit()
