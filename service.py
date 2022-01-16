@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3.dbapi2 import connect
+from typing import NewType
 import constants as const
 import pandas as pd
 
@@ -48,8 +49,7 @@ def practice():
     while response == "again":
         response = input("How it is in swedish?\n")
         if response.strip() == row[2]:
-            print("\nnoice!\n")
-            print(int(row[0]))
+            print("\nnoice!")
             add_point(int(row[0]))
             return True
         if response == const.end:
@@ -57,9 +57,21 @@ def practice():
         if response == const.quit:
             return False
         else:
-            print("Nope. Try again\n")
+            print("Nope. Should be: " + row[2] + ". Try again.")
+            print("ID of the word in table "+ str(row[0]) + "\n")
             remove_point(int(row[0]))
             response = "again"
+
+def replace_word():
+    word_id = input("Which ID?\n")
+    new_word = input("How it should be?\n")
+    to_replace = "SELECT swedish_word FROM words WHERE id = " + word_id.strip() + ";" 
+    replace = "UPDATE words SET swedish_word = '" + new_word.strip() + "' WHERE ID = " + str(word_id) + ";" 
+    will_be_replaced = con.execute(to_replace)
+    for row in will_be_replaced:
+        print("Word: " + row[0] + " will be replaced with word: " + new_word.strip() +".")
+    con.execute(replace)
+    con.commit()
 
 def return_response(response):
     if response:
@@ -102,12 +114,13 @@ def import_words():
     swedish = "";
     polish = "";
     for index, row in df.T.iteritems():
-        data_tuple = (row[1], row[2], 0)
+        
         print(row[2])
-        exists = '''SELECT Count(1) FROM words WHERE swedish_word = ''' + "'"+str(row[2])+"'"
+        exists = '''SELECT Count(1) FROM words WHERE polish_word = ''' + "'"+str(row[1])+"'"
         print(exists)
         swedish = str(row[2])
         polish = str(row[1])
+        data_tuple = (polish, swedish, 0)
         what = con.execute(exists)
         for row in what:
             print(str(row[0]))
@@ -115,8 +128,23 @@ def import_words():
                 con.execute('''INSERT INTO words (polish_word, swedish_word, counter) VALUES (?,?,?);''', data_tuple)
                 print("New word is added to library: " + polish + " - " + swedish)
                 con.commit()
-                
+            if row[0] == 1:
+                check = '''SELECT swedish_word FROM words WHERE polish_word = ''' + "'"+polish+"'"
+                print("check " + check)
+                checked_word = con.execute(check)
+                for row in checked_word:
+                    checking_spelling(row[0], swedish, polish, data_tuple)    
 
+#def update_word():
+               
 
+def checking_spelling(word_to_check, swedish, polish, data_tuple):
+    if(word_to_check != swedish):
+                        print("checked" + word_to_check)
+                        to_delete = '''DELETE FROM words WHERE polish_word = ''' + "'"+polish+"'"
+                        con.execute(to_delete)
+                        con.commit()
+                        con.execute('''INSERT INTO words (polish_word, swedish_word, counter) VALUES (?,?,?);''', data_tuple)
+                        con.commit()
 
     
