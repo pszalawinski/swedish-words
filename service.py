@@ -99,18 +99,23 @@ def drop_table():
 
 def import_words():
     df = pd.read_excel('words.xlsx')
-
+    swedish = "";
+    polish = "";
     for index, row in df.T.iteritems():
         data_tuple = (row[1], row[2], 0)
-        exists = '''SELECT count(1) FROM words WHERE swedish_word = ''' + "'"+str(row[2])+"'"
+        print(row[2])
+        exists = '''SELECT Count(1) FROM words WHERE swedish_word = ''' + "'"+str(row[2])+"'"
         print(exists)
+        swedish = str(row[2])
+        polish = str(row[1])
         what = con.execute(exists)
         for row in what:
-            print(str(row))
-            if row == '(0,)':
-                con.execute('''INSERT INTO words (polish_word, swedish_word, counter) VALUES (?,?,?);''', data_tuple )
+            print(str(row[0]))
+            if row[0] == 0:
+                con.execute('''INSERT INTO words (polish_word, swedish_word, counter) VALUES (?,?,?);''', data_tuple)
+                print("New word is added to library: " + polish + " - " + swedish)
                 con.commit()
-                print("New word is added to library: " + str(row[1]) + " - " + str(row[2]))
+                
 
 
 
