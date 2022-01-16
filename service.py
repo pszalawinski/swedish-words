@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import connect
 import constants as const
+import pandas as pd
 
 con = sqlite3.connect('words.db')
 cur = con.cursor()
@@ -95,3 +96,27 @@ def create_table():
 def drop_table():
     con.execute('''DROP TABLE words;''')
     con.commit()
+
+def import_words():
+    df = pd.read_excel('words.xlsx')
+    swedish = "";
+    polish = "";
+    for index, row in df.T.iteritems():
+        data_tuple = (row[1], row[2], 0)
+        print(row[2])
+        exists = '''SELECT Count(1) FROM words WHERE swedish_word = ''' + "'"+str(row[2])+"'"
+        print(exists)
+        swedish = str(row[2])
+        polish = str(row[1])
+        what = con.execute(exists)
+        for row in what:
+            print(str(row[0]))
+            if row[0] == 0:
+                con.execute('''INSERT INTO words (polish_word, swedish_word, counter) VALUES (?,?,?);''', data_tuple)
+                print("New word is added to library: " + polish + " - " + swedish)
+                con.commit()
+                
+
+
+
+    

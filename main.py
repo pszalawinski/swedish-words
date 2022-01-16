@@ -38,6 +38,9 @@ while user_input.upper != const.quit:
     if user_input.upper() == "SHOW":
        service.print_all_words()
        user_input = const.end
+    if user_input.upper() == "I":
+       service.import_words()
+       user_input = const.end
     if user_input.upper() == const.end:
         user_input = input("You are back in menu: " + const.what_do)
         while user_input == "":
